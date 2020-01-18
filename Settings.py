@@ -1,8 +1,9 @@
 # select categories of "fear", "surprise", "sadness", "happiness", "anger", "disgust"
-CATEGORIES = ["fear", "surprise", "sadness", "happiness", "anger", "disgust"]
+CATEGORIES = ["anger", "happiness"]
 EPOCHS = 50
-PRINCIPAL_COMPONENTS = 10
-LOGISTIC = False
-LEARNING_RATE = 0.1
-DATASET_TYPE = "aligned"
-STOCHASTIC_GRADIENT = True  # stochastic or batch gradient decent
+FOLDS = 10
+PRINCIPAL_COMPONENTS = 4
+LOGISTIC = True
+LEARNING_RATE = 0.005
+DATASET_TYPE = "resized"
+STOCHASTIC_GRADIENT = False  # stochastic or batch gradient decent

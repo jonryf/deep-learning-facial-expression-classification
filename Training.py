@@ -3,7 +3,7 @@ import numpy as np
 
 from LogisticRegression import LogisticRegression
 from PCA import PCA
-from Settings import LOGISTIC, CATEGORIES, LEARNING_RATE, PRINCIPAL_COMPONENTS, EPOCHS, STOCHASTIC_GRADIENT
+from Settings import LOGISTIC, CATEGORIES, LEARNING_RATE, PRINCIPAL_COMPONENTS, EPOCHS, STOCHASTIC_GRADIENT, FOLDS
 from SoftmaxRegression import SoftmaxRegression
 from Utils import kfold
 
@@ -85,10 +85,8 @@ def visualize_data_avg(train_data, val_data):
     :param train_data: train data
     :param val_data: validation data
     """
-    x = np.arange(1, len(train_data.error[0]) + 1)
     for data in [train_data.error, val_data.error]:
         mean = np.sum(data, axis=0) / data.shape[0]  # divide by folds
-        x_std = []
         y_std = []
 
         for i in range(0, 50):
@@ -149,14 +147,12 @@ def train(all_data):
         train_data = None
         for i in range(k):
             if i != fold and i != ((fold + 1) % k):
-                print(i)
                 if train_data is None:
                     train_data = folds[i]
                 else:
                     train_data = np.concatenate((train_data, folds[i]))
         train_data = split_x_y(train_data)
 
-        print(train_data[0])
         pca = PCA(train_data[0], PRINCIPAL_COMPONENTS)
 
         # PCA and one_hot
@@ -213,8 +209,8 @@ def train(all_data):
         elif best_model.epoch_data.score() > model.epoch_data.score():
             best_model = model
 
-    avg_epoch_data_train.align(10)
-    avg_epoch_data_val.align(10)
+    avg_epoch_data_train.align(FOLDS)
+    avg_epoch_data_val.align(FOLDS)
 
     visualize_data_avg(avg_epoch_data_train, avg_epoch_data_val)
     if not LOGISTIC:

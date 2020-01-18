@@ -3,7 +3,7 @@ from math import floor
 import numpy as np
 
 # define sigmoid and its derivative for activation & backprop
-from Settings import CATEGORIES
+from Settings import CATEGORIES, FOLDS
 
 
 def sigmoid(x):
@@ -15,16 +15,17 @@ def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
 
-def kfold(data, k=10):
+def kfold(data):
     """
     Balanced k-fold shuffle.
 
     The input data is shuffled per category, but the shuffled sets of categories is added along to a single list.
 
     :param data: input data
-    :param k: number of folds
     :return: folds
     """
+
+    k = FOLDS
 
     fold_size = int((1 / k) * len(data))
     folds = []
@@ -38,5 +39,4 @@ def kfold(data, k=10):
         if len(folds) == fold_index:
             folds.append([])
         folds[fold_index].append(data[section * section_size + section_index])
-
     return folds
