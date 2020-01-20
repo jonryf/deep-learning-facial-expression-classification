@@ -1,9 +1,10 @@
 from math import floor
+import matplotlib.pyplot as plt
 
 import numpy as np
 
 # define sigmoid and its derivative for activation & backprop
-from Settings import CATEGORIES, FOLDS
+from Settings import CATEGORIES, FOLDS, PRINCIPAL_COMPONENTS
 
 
 def sigmoid(x):
@@ -40,3 +41,19 @@ def kfold(data):
             folds.append([])
         folds[fold_index].append(data[section * section_size + section_index])
     return folds
+
+
+def show_principal_components(pca, number_components=4):
+    """
+    Show the principal components as images
+
+    :param pca: pca instance
+    :param number_components: number of components to show
+    """
+    images = pca.components
+    images = images[:, :number_components]
+    images = [img.reshape(122, 160) for img in images.T]
+    images = np.concatenate(images, axis=1)
+
+    plt.imshow(images, cmap='gray')
+    plt.show()

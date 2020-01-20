@@ -1,6 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
+from Settings import CATEGORIES
+
 
 class SoftmaxRegression:
 
@@ -13,7 +15,7 @@ class SoftmaxRegression:
         """
         self.lr = lr
         self.c = c
-        self.w = np.ones((dim, c))
+        self.w = np.zeros((dim, c))
 
     def stochastic_gradient_descent(self, X, labels):
         """
@@ -29,12 +31,12 @@ class SoftmaxRegression:
             data = X[i]
             label = labels[i]
 
-            predicted = np.exp(data.dot(self.w)) / np.sum(np.exp(data.dot(self.w)), axis=0)
+            predicted = np.exp(data.dot(self.w)) / np.sum(np.exp(data.dot(self.w)), axis=0, keepdims=True)
             error = label - predicted
             # update weights
-            for i in range(len(self.w)):
-                grad = error * data[i]
-                self.w[i] += self.lr * grad
+            grad = data.reshape(1, 10).T.dot(error.reshape(1, -1))
+            self.w += self.lr * grad
+
 
     def probabilities(self, X):
         """
@@ -49,7 +51,7 @@ class SoftmaxRegression:
         predicted = self.probabilities(X)
         error = labels - predicted
         grad = X.T.dot(error)
-        self.w += self.lr * grad
+        self.w += 1/len(labels) * self.lr * grad
 
     def accuracy(self, prob_vec, labels):  # prob_vec row is probabilities of a single instance
         """
@@ -76,9 +78,11 @@ class SoftmaxRegression:
         """
         visualized = pca.components.dot(self.w).T.reshape((self.c, -1))
         imgs_data = [img.reshape(224, 192) for img in visualized]
-        for img in imgs_data:
-            plt.imshow(img, cmap="gray")
-            plt.show()
+        imgs_data = np.concatenate(imgs_data, axis=1)
+
+        plt.title(" - ".join(CATEGORIES))
+        plt.imshow(imgs_data, cmap="gray")
+        plt.show()
 
     def loss(self, labels, predicted):
         """

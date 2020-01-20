@@ -10,7 +10,7 @@ class LogisticRegression:
         :param dim: the number of the dimensions (principle components)
         """
         self.lr = lr
-        self.w = np.zeros(dim)
+        self.w = np.ones(dim)
 
     def stochastic_gradient_descent(self, X, labels):
         """
@@ -20,7 +20,6 @@ class LogisticRegression:
         indices = [i for i in range(len(labels))]
         np.random.shuffle(indices)
         for i in indices:
-
             # make prediction
             data = X[i]
             label = labels[i]
@@ -34,6 +33,7 @@ class LogisticRegression:
 
     def probabilities(self, X):
         """
+        Return a vector of probabilities based on the weights (forward pass
 
         :param X: the input data
         :return: a vector of probability. Each number in the vector represent one of the input
@@ -43,6 +43,7 @@ class LogisticRegression:
 
     def accuracy(self, prob_vec, labels):
         """
+        Calculate the accuracy
 
         :param prob_vec: a probability vector of all of the images
         :param labels: the labels for all of the images
@@ -64,7 +65,7 @@ class LogisticRegression:
         predicted = self.probabilities(X)
         error = labels - predicted
         grad = X.T.dot(error)
-        self.w += self.lr * grad
+        self.w += 1/len(labels) * self.lr * grad
 
     def loss(self, labels, predicted):
         """
@@ -74,5 +75,6 @@ class LogisticRegression:
         :param predicted: the predicted value (probability)
         :return:
         """
-        cost = -(np.log(predicted[labels == 1]).sum() + np.log(1 - predicted[~(labels == 1)]).sum()) / len(labels)
+        cost = -(np.log(predicted[labels == 1]).sum() +
+                 np.log(1 - predicted[~(labels == 1)]).sum()) / len(labels)
         return cost
