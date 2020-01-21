@@ -4,9 +4,9 @@ import numpy as np
 from LogisticRegression import LogisticRegression
 from PCA import PCA
 from Settings import LOGISTIC, CATEGORIES, LEARNING_RATE, PRINCIPAL_COMPONENTS, EPOCHS, STOCHASTIC_GRADIENT, FOLDS, \
-    EARLY_STOPPING_THRESHOLD, SHOW_PRINCIPAL_COMPONENTS, STOCHASTIC_VS_BATCH
+    EARLY_STOPPING_THRESHOLD, SHOW_PRINCIPAL_COMPONENTS, STOCHASTIC_VS_BATCH, SHOW_CONFUSION_MATRIX
 from SoftmaxRegression import SoftmaxRegression
-from Utils import kfold, show_principal_components
+from Utils import kfold, show_principal_components, confusion_matrix
 
 
 class EpochData:
@@ -222,6 +222,9 @@ def train(all_data):
             # save the validation data to the model
             model.epoch_data = validation_performance
 
+            # save the test data to the model
+            model.test_data = test_data
+
             # save the pca
             model.pca = pca
 
@@ -240,7 +243,6 @@ def train(all_data):
             elif best_model.epoch_data.score() > model.epoch_data.score():
                 best_model = model
 
-            print(stochastic)
             if STOCHASTIC_VS_BATCH:
                 # display graph
                 if stochastic == 1:
@@ -260,6 +262,9 @@ def train(all_data):
     visualize_data_avg(avg_epoch_data_train, avg_epoch_data_val)
     if not LOGISTIC:
         best_model.visualize_weights(model.pca)
+
+    if SHOW_CONFUSION_MATRIX:
+        confusion_matrix(best_model)
 
     if SHOW_PRINCIPAL_COMPONENTS:
         show_principal_components(pca)

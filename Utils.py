@@ -57,3 +57,28 @@ def show_principal_components(pca, number_components=4):
 
     plt.imshow(images, cmap='gray')
     plt.show()
+
+
+def confusion_matrix(model):
+    """
+    Display a confusion matrix from the test data
+
+    :param model: SoftMax model
+    """
+    test_data = model.test_data
+    probabilities = model.probabilities(test_data[0])
+    predictions = model.predictions(probabilities).reshape(-1)
+    labels = test_data[1]
+
+    matrix = np.zeros((len(CATEGORIES), len(CATEGORIES)))
+    for i in range(len(predictions)):
+        matrix[np.argmax(labels[i])][predictions[i]] += 1
+
+    for i in range(len(CATEGORIES)):
+        matrix[i] /= sum(matrix[i])
+
+    # print the confusion matrix
+    print(matrix)
+
+
+

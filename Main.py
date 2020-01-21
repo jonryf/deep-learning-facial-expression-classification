@@ -23,5 +23,4 @@ for i, category in enumerate(CATEGORIES):
 all_data = list(zip(X, y))
 
 # randomize the dataset so I can fold properly
-
 train(all_data)

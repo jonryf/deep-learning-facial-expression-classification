@@ -53,8 +53,14 @@ class SoftmaxRegression:
         grad = X.T.dot(error)
         self.w += 1/len(labels) * self.lr * grad
 
-    def accuracy(self, prob_vec, labels):  # prob_vec row is probabilities of a single instance
+    def predictions(self, prob_vec):
+        predictions = np.argmax(prob_vec, axis=1).reshape(1, -1)
+        return predictions
+
+
+    def accuracy(self, prob_vec, labels):
         """
+        Calculate the accuracy
 
         :param prob_vec: a vector of the calculated probabilities
         :param labels: labels of the input data

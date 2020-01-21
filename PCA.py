@@ -31,11 +31,9 @@ class PCA:
         evals, Vi = np.linalg.eigh(C)
         z = list(zip(evals, Vi))
         z.sort(reverse=True)
-
         idx = np.argsort(evals)[::-1]
-        evecs = Vi[:, idx]
-        evecs = evecs[:, :self.k]
-        pc = evecs
+        pc = Vi[:, idx]
+        pc = pc[:, :self.k]
 
         # final components (num pixels by k matrix)
         components = np.matmul(A.T, pc)
@@ -44,7 +42,6 @@ class PCA:
         sorted_evals = np.array([x[0] for x in z])
         postive_evals = sorted_evals[:self.k]
         singular_values = np.sqrt(postive_evals.reshape(1, -1))
-        assert np.allclose(np.linalg.norm(components, axis=0), 1)
 
         return components, singular_values
 
